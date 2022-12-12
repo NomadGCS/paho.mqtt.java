@@ -15,22 +15,14 @@
  */
 package org.eclipse.paho.mqttv5.client.internal;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SNIHostName;
-import javax.net.ssl.SNIServerName;
-import javax.net.ssl.SSLParameters;
-import javax.net.ssl.SSLPeerUnverifiedException;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
-
 import org.eclipse.paho.mqttv5.client.logging.Logger;
 import org.eclipse.paho.mqttv5.client.logging.LoggerFactory;
 import org.eclipse.paho.mqttv5.common.MqttException;
+
+import javax.net.ssl.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A network module for connecting over SSL.
@@ -131,7 +123,7 @@ public class SSLNetworkModule extends TCPNetworkModule {
 
 		// SNI support.  Should be automatic under some circumstances - not all, apparently
 		SSLParameters sslParameters = ((SSLSocket)socket).getSSLParameters();
-		List<SNIServerName> sniHostNames = new ArrayList<SNIServerName>(1);
+		List<SNIServerName> sniHostNames = new ArrayList<SNIServerName>(sslParameters.getServerNames());
 		sniHostNames.add(new SNIHostName(host));
 		sslParameters.setServerNames(sniHostNames);
 
